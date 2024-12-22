@@ -14,6 +14,14 @@ after_success:
   - docker build -t gopidon/multi-nginx ./nginx
   - docker build -t gopidon/multi-server ./server
   - docker build -t gopidon/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push gopidon/multi-client
+  - docker push gopidon/multi-nginx
+  - docker push gopidon/multi-server
+  - docker push gopidon/multi-worker
+  
+
+
 
 # deploy:
 #   provider: elasticbeanstalk
