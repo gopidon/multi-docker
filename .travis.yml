@@ -1,0 +1,28 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+before_install:
+  - docker build -t gopidon/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true gopidon/react-test npm run test
+
+after_success:
+  - docker build -t gopidon/multi-client ./client
+  - docker build -t gopidon/multi-nginx ./nginx
+  - docker build -t gopidon/multi-server ./server
+  - docker build -t gopidon/multi-worker ./worker
+
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "ap-south-1"
+#   app:  "frontend"
+#   env:  "Frontend-env"
+#   bucket_name:  "elasticbeanstalk-ap-south-1-267136379364"
+#   bucket_path:  "frontend"
+#   on:
+#     branch: main
+#   access_key_id:  $AWS_ACCESS_KEY
+#   secret_access_key:  "$AWS_SECRET_KEY"
